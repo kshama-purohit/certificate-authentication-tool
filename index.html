@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate Authentication Tool</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f0;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3rem 1rem;
+    }
+
+    .tool-wrap {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .tool-header {
+      margin-bottom: 2rem;
+    }
+
+    .tool-header h1 {
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tool-header p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .card {
+      background: #fff;
+      border: 0.5px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .field-group {
+      margin-bottom: 1rem;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-label {
+      font-size: 13px;
+      color: #666;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 14px;
+      border: 0.5px solid rgba(0,0,0,0.2);
+      border-radius: 8px;
+      background: #fff;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-color: rgba(0,0,0,0.4);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+    }
+
+    input[type="number"] {
+      width: 80px;
+    }
+
+    .file-drop {
+      border: 0.5px dashed rgba(0,0,0,0.25);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      background: #fafaf8;
+      transition: background 0.15s;
+    }
+
+    .file-drop:hover {
+      background: #f0f0eb;
+    }
+
+    .file-drop i {
+      font-size: 24px;
+      color: #999;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .file-drop span {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .file-drop input {
+      display: none;
+    }
+
+    .shift-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .shift-label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .divider {
+      border: none;
+      border-top: 0.5px solid rgba(0,0,0,0.1);
+      margin: 1rem 0;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 1.25rem;
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      background: transparent;
+      color: #1a1a1a;
+      border: 0.5px solid rgba(0,0,0,0.25);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background: #f5f5f0;
+    }
+
+    .output-card {
+      background: #fafaf8;
+      border: 0.5px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .output-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .output-text {
+      font-size: 14px;
+      color: #1a1a1a;
+      font-family: monospace;
+      background: #fff;
+      border: 0.5px solid rgba(0,0,0,0.12);
+      border-radius: 8px;
+      padding: 10px 12px;
+      word-break: break-all;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .badge-success {
+      background: #eaf3de;
+      color: #3b6d11;
+    }
+
+    .badge-error {
+      background: #fcebeb;
+      color: #a32d2d;
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 0.5px solid rgba(0,0,0,0.2);
+      background: transparent;
+      color: #1a1a1a;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s;
+    }
+
+    .download-btn:hover {
+      background: #f0f0eb;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body { background: #1a1a1a; color: #f0f0eb; }
+      .card { background: #242424; border-color: rgba(255,255,255,0.1); }
+      input[type="text"], input[type="number"] { background: #2c2c2a; color: #f0f0eb; border-color: rgba(255,255,255,0.15); }
+      input[type="text"]:focus, input[type="number"]:focus { border-color: rgba(255,255,255,0.35); }
+      .file-drop { background: #1e1e1c; border-color: rgba(255,255,255,0.15); }
+      .file-drop:hover { background: #262624; }
+      .tool-header p, .field-label, .shift-label, .file-drop span, .file-drop i { color: #999; }
+      .btn-primary { background: #f0f0eb; color: #1a1a1a; }
+      .btn-secondary { color: #f0f0eb; border-color: rgba(255,255,255,0.2); }
+      .btn-secondary:hover { background: #2c2c2a; }
+      .output-card { background: #1e1e1c; border-color: rgba(255,255,255,0.1); }
+      .output-text { background: #242424; color: #f0f0eb; border-color: rgba(255,255,255,0.1); }
+      .download-btn { color: #f0f0eb; border-color: rgba(255,255,255,0.2); }
+      .download-btn:hover { background: #2c2c2a; }
+      .divider { border-color: rgba(255,255,255,0.1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="tool-wrap">
+    <div class="tool-header">
+      <h1><i class="ti ti-shield-lock" aria-hidden="true"></i> Certificate authentication</h1>
+      <p>Hide or extract text from images using steganography</p>
+    </div>
+
+    <div class="card">
+      <div class="field-group">
+        <label class="field-label">Image</label>
+        <div class="file-drop" onclick="document.getElementById('imageInput').click()">
+          <i class="ti ti-photo-up" aria-hidden="true"></i>
+          <span id="fileLabel">Click to select an image</span>
+          <input type="file" id="imageInput" accept="image/*" onchange="handleFile(this)">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="field-group">
+        <label class="field-label" for="textInput">Text to hide</label>
+        <input type="text" id="textInput" placeholder="Leave blank to extract text from image">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Shift value</label>
+        <div class="shift-row">
+          <input type="number" id="shiftInput" value="3" min="0">
+          <span class="shift-label">Caesar cipher offset</span>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="hideText()">
+          <i class="ti ti-eye-off" aria-hidden="true"></i> Hide text
+        </button>
+        <button class="btn-secondary" onclick="extractText()">
+          <i class="ti ti-eye" aria-hidden="true"></i> Extract text
+        </button>
+      </div>
+    </div>
+
+    <div class="output-card" id="outputCard">
+      <div id="statusBadge"></div>
+      <div id="outputContent"></div>
+    </div>
+  </div>
+
+  <script>
+    function handleFile(input) {
+      const name = input.files[0]?.name || 'No file selected';
+      document.getElementById('fileLabel').textContent = name;
+    }
+
+    function showOutput(status, content) {
+      const card = document.getElementById('outputCard');
+      const badge = document.getElementById('statusBadge');
+      const out = document.getElementById('outputContent');
+      card.style.display = 'block';
+      badge.innerHTML = status === 'success'
+        ? '<span class="status-badge badge-success"><i class="ti ti-check" aria-hidden="true"></i> Done</span>'
+        : '<span class="status-badge badge-error"><i class="ti ti-alert-circle" aria-hidden="true"></i> Error</span>';
+      out.innerHTML = content;
+    }
+
+    function hideText() {
+      const imageInput = document.getElementById('imageInput');
+      const text = document.getElementById('textInput').value;
+      if (!imageInput.files[0]) { showOutput('error', '<p class="output-text">Please select an image file.</p>'); return; }
+      if (!text) { showOutput('error', '<p class="output-text">Please enter text to hide.</p>'); return; }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width; canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const pixelData = imageData.data;
+          let binText = '';
+          for (let i = 0; i < text.length; i++) binText += text.charCodeAt(i).toString(2).padStart(8, '0');
+          if (binText.length > pixelData.length / 4) { showOutput('error', '<p class="output-text">Text is too long to hide in this image.</p>'); return; }
+          let index = 0;
+          for (let i = 0; i < binText.length; i++) { pixelData[index] = (pixelData[index] & 0xFE) | parseInt(binText[i]); index += 4; }
+          ctx.putImageData(imageData, 0, 0);
+          const encoded = canvas.toDataURL('image/png');
+          showOutput('success', `<img src="${encoded}" alt="Encoded image"><br><button class="download-btn" onclick="downloadImage('${encoded}')"><i class='ti ti-download' aria-hidden='true'></i> Download image</button>`);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(imageInput.files[0]);
+    }
+
+    function extractText() {
+      const imageInput = document.getElementById('imageInput');
+      if (!imageInput.files[0]) { showOutput('error', '<p class="output-text">Please select an image file.</p>'); return; }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width; canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+          let binText = '', result = '', index = 0;
+          while (index < pixelData.length) {
+            binText += pixelData[index] & 0x01;
+            index += 4;
+            if (binText.length % 8 === 0) {
+              const charCode = parseInt(binText, 2);
+              if (charCode === 0) break;
+              result += String.fromCharCode(charCode);
+              binText = '';
+            }
+          }
+          showOutput('success', result
+            ? `<p style="font-size:13px;color:#666;margin:0 0 6px;">Extracted text</p><div class="output-text">${result}</div>`
+            : '<p class="output-text">No hidden text found.</p>');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(imageInput.files[0]);
+    }
+
+    function downloadImage(dataUrl) {
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = 'encoded-image.png';
+      a.click();
+    }
+  </script>
+</body>
+</html>
